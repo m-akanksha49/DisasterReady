@@ -1,93 +1,121 @@
-const express = require("express");
-const router = express.Router();
-const axios = require("axios");
+import React, { useState } from "react";
+import axios from "axios";
 
-router.post("/generate-quiz", async (req, res) => {
-  try {
-    const { role, classLevel, topic } = req.body;
+const QuizGenerator = () => {
+  const [role, setRole] = useState("");
+  const [classLevel, setClassLevel] = useState("");
+  const [topic, setTopic] = useState("");
 
-    if (!topic) {
-      return res.status(400).json({
-        error: "Topic is required"
-      });
-    }
+  const [questions, setQuestions] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-    const prompt = `
-You are a quiz generator.
-
-Generate 5 multiple-choice questions for:
-
-Role: ${role || "Student"}
-Class Level: ${classLevel || "General"}
-Topic: ${topic}
-
-STRICT RULES:
-- Return ONLY valid JSON
-- No markdown
-- No explanation
-
-Format:
-{
-  "questions": [
-    {
-      "question": "string",
-      "options": ["A", "B", "C", "D"],
-      "answer": "A"
-    }
-  ]
-}
-`;
-
-    const response = await axios.post(
-      "https://openrouter.ai/api/v1/chat/completions",
-      {
-        model: "openai/gpt-4o-mini",
-        messages: [
-          {
-            role: "user",
-            content: prompt
-          }
-        ]
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-          "Content-Type": "application/json"
-        }
-      }
-    );
-
-    let aiText = response.data.choices?.[0]?.message?.content;
-
-    if (!aiText) {
-      return res.status(500).json({
-        error: "No response from AI"
-      });
-    }
-
-    // SAFE JSON PARSE (IMPORTANT FIX)
-    let json;
+  const generateQuiz = async () => {
     try {
-      json = JSON.parse(aiText);
-    } catch (err) {
-      console.error("AI returned invalid JSON:", aiText);
+      setLoading(true);
 
-      return res.status(500).json({
-        error: "AI response format error",
-        raw: aiText
-      });
+      const response = await axios.post(
+        "https://disasterready-backend.onrender.com/api/generate-quiz",
+        {
+          role,
+          classLevel,
+          topic,
+        }
+      );
+
+      console.log("Quiz Response:", response.data);
+
+      if (response.data.questions) {
+        setQuestions(response.data.questions);
+      } else {
+        alert("No quiz questions received");
+      }
+
+    } catch (error) {
+      console.error("Quiz Error:", error);
+
+      alert("Failed to generate quiz. Please check the server.");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    res.json(json);
+  return (
+    <div style={{ padding: "20px" }}>
+      <h1>AI Quiz Generator</h1>
 
-  } catch (error) {
-    console.error("Quiz generation error:", error.message);
+      <input
+        type="text"
+        placeholder="Enter Role"
+        value={role}
+        onChange={(e) => setRole(e.target.value)}
+        style={{
+          display: "block",
+          marginBottom: "10px",
+          padding: "10px",
+          width: "300px"
+        }}
+      />
 
-    res.status(500).json({
-      error: "Failed to generate quiz",
-      details: error.message
-    });
-  }
-});
+      <input
+        type="text"
+        placeholder="Enter Class Level"
+        value={classLevel}
+        onChange={(e) => setClassLevel(e.target.value)}
+        style={{
+          display: "block",
+          marginBottom: "10px",
+          padding: "10px",
+          width: "300px"
+        }}
+      />
 
-module.exports = router;
+      <input
+        type="text"
+        placeholder="Enter Topic"
+        value={topic}
+        onChange={(e) => setTopic(e.target.value)}
+        style={{
+          display: "block",
+          marginBottom: "10px",
+          padding: "10px",
+          width: "300px"
+        }}
+      />
+
+      <button
+        onClick={generateQuiz}
+        disabled={loading}
+        style={{
+          padding: "10px 20px",
+          cursor: "pointer"
+        }}
+      >
+        {loading ? "Generating..." : "Generate Quiz"}
+      </button>
+
+      <div style={{ marginTop: "30px" }}>
+        {questions.map((q, index) => (
+          <div
+            key={index}
+            style={{
+              border: "1px solid #ccc",
+              padding: "15px",
+              marginBottom: "15px",
+              borderRadius: "10px"
+            }}
+          >
+            <h3>
+              {index + 1}. {q.question}
+            </h3>
+
+            {q.options.map((option, i) => (
+              <p key={i}>• {option}</p>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default QuizGenerator;
