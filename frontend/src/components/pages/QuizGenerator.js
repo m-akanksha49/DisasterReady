@@ -121,21 +121,43 @@ function QuizGenerator() {
       setError("Please enter both class level and topic.");
       return;
     }
+
     setError("");
     setLoading(true);
+
     try {
-      const res = await axios.post("http://localhost:5000/api/quiz/generate-quiz", {
-        classLevel,
-        topic,
-      });
-      setQuiz(res.data.questions);
-      setCurrent(0);
-      setScore(0);
-      setShowResult(false);
-      setTimeLeft(60);
-      setAnswers([]);
-      setSelected("");
+      const response = await fetch(
+        "https://disasterready-backend.onrender.com/api/generate-quiz",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            classLevel,
+            topic,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      console.log("Quiz Data:", data);
+
+      if (data.questions) {
+        setQuiz(data.questions);
+        setCurrent(0);
+        setScore(0);
+        setShowResult(false);
+        setTimeLeft(60);
+        setAnswers([]);
+        setSelected("");
+      } else {
+        setError("No quiz questions received");
+      }
+
     } catch (err) {
+      console.error(err);
       setError("Failed to generate quiz. Please check the server.");
     } finally {
       setLoading(false);
