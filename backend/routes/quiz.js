@@ -1,60 +1,76 @@
 const express = require("express");
 const router = express.Router();
-const axios = require("axios");
 
 router.post("/generate-quiz", async (req, res) => {
   try {
-    const { role, classLevel, topic } = req.body;
+    const { topic } = req.body;
 
-    const prompt = `
-Generate 5 MCQ questions for:
-Role: ${role || "Student"}
-Class: ${classLevel || "General"}
-Topic: ${topic}
-
-Return ONLY JSON:
-{
-  "questions": [
-    {
-      "question": "...",
-      "options": ["A", "B", "C", "D"],
-      "answer": "A"
-    }
-  ]
-}
-`;
-
-    const response = await axios.post(
-      "https://openrouter.ai/api/v1/chat/completions",
-      {
-        model: "openai/gpt-4o-mini",
-        messages: [{ role: "user", content: prompt }],
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-          "Content-Type": "application/json",
+    const quizzes = {
+      earthquake: [
+        {
+          question: "What should you do during an earthquake?",
+          options: [
+            "Run outside immediately",
+            "Hide under a table",
+            "Use elevator",
+            "Stand near windows"
+          ],
+          answer: "Hide under a table"
         },
-      }
-    );
+        {
+          question: "Which scale measures earthquakes?",
+          options: [
+            "Richter Scale",
+            "Celsius Scale",
+            "Pascal Scale",
+            "Kelvin Scale"
+          ],
+          answer: "Richter Scale"
+        }
+      ],
 
-    let aiText = response.data.choices[0].message.content;
+      floods: [
+        {
+          question: "What should you avoid during floods?",
+          options: [
+            "Walking in flood water",
+            "Listening to alerts",
+            "Using flashlight",
+            "Moving to higher ground"
+          ],
+          answer: "Walking in flood water"
+        }
+      ],
 
-    let json;
-    try {
-      json = JSON.parse(aiText);
-    } catch (err) {
-      return res.status(500).json({
-        error: "AI returned invalid JSON",
-        raw: aiText,
-      });
-    }
+      fire: [
+        {
+          question: "What is the emergency number for fire services?",
+          options: ["101", "100", "108", "112"],
+          answer: "101"
+        }
+      ]
+    };
 
-    res.json(json);
+    const selectedQuiz =
+      quizzes[topic?.toLowerCase()] || [
+        {
+          question: `What is ${topic}?`,
+          options: ["Disaster", "Safety", "Emergency", "Risk"],
+          answer: "Disaster"
+        }
+      ];
+
+    res.json({
+      success: true,
+      questions: selectedQuiz
+    });
 
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ error: "Quiz generation failed" });
+    console.error(error);
+
+    res.status(500).json({
+      error: "Quiz generation failed"
+    });
   }
 });
 
