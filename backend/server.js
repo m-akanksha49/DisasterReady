@@ -11,6 +11,10 @@ const studentsRouter    = require("./routes/students");
 const assignmentsRouter = require("./routes/assignments");
 const drillsRouter      = require("./routes/drills");   // ✅ NEW
 
+
+const quizRouter = require("./routes/quiz");
+app.use("/api", quizRouter);
+
 const app = express();
 
 // Middleware
@@ -22,12 +26,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // API Routes
-app.use("/api/auth",        authRouter);
-app.use("/api/users",       usersRouter);
-app.use("/api/modules",     modulesRouter);
-app.use("/api/students",    studentsRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/users", usersRouter);
+app.use("/api/modules", modulesRouter);
+app.use("/api/students", studentsRouter);
 app.use("/api/assignments", assignmentsRouter);
-app.use("/api/drills",      drillsRouter);       // ✅ NEW
+app.use("/api/drills", drillsRouter);     // ✅ NEW
 
 // Health check
 app.get("/api/health", (req, res) => {
