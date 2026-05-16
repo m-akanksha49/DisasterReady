@@ -1,30 +1,36 @@
-const generateQuiz = async () => {
+const express = require("express");
+const router = express.Router();
+
+router.post("/generate-quiz", async (req, res) => {
   try {
-    const response = await fetch(
-      "https://disasterready-backend.onrender.com/api/generate-quiz",
+    const { classLevel, topic } = req.body;
+
+    const questions = [
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          topic: "fire",
-        }),
+        question: `What should you do during a ${topic} emergency?`,
+        options: [
+          "Stay calm and follow safety rules",
+          "Ignore warnings",
+          "Run randomly",
+          "Hide without informing anyone"
+        ],
+        answer: "Stay calm and follow safety rules"
+      },
+      {
+        question: `Which emergency number is commonly used for help?`,
+        options: ["100", "108", "112", "All of the above"],
+        answer: "All of the above"
       }
-    );
+    ];
 
-    const data = await response.json();
+    res.json({ questions });
 
-    console.log(data);
-
-    if (data.questions) {
-      setQuestions(data.questions);
-    } else {
-      alert("No questions returned");
-    }
-
-  } catch (err) {
-    console.error(err);
-    alert("Server connection failed");
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Quiz generation failed"
+    });
   }
-};
+});
+
+module.exports = router;
