@@ -1,0 +1,529 @@
+/* ============================================================
+   TsunamiModule.css — Tsunami Learning Slides
+   Matches dark glassmorphism theme from Dashboard.css
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap');
+
+/* ── Overlay ── */
+.tsm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeOverlay 0.3s ease;
+}
+
+@keyframes fadeOverlay {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Modal ── */
+.tsm-modal {
+  width: 100%;
+  max-width: 760px;
+  max-height: 92vh;
+  background: rgba(10, 15, 30, 0.97);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 28px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7);
+  animation: modalIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  font-family: 'Sora', sans-serif;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.92) translateY(20px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ── Header ── */
+.tsm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  flex-shrink: 0;
+}
+
+.tsm-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tsm-module-badge {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6ee7b7;
+  background: rgba(110, 231, 183, 0.12);
+  border: 1px solid rgba(110, 231, 183, 0.25);
+  border-radius: 20px;
+  padding: 4px 12px;
+}
+
+.tsm-slide-count {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.tsm-header-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.tsm-progress-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.tsm-close-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.tsm-close-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+/* ── Progress Track ── */
+.tsm-progress-track {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.07);
+  flex-shrink: 0;
+}
+
+.tsm-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease, background 0.5s ease;
+}
+
+/* ── Slide Dots ── */
+.tsm-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 12px 24px 8px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.tsm-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.tsm-dot:hover { border-color: rgba(255,255,255,0.5); transform: scale(1.2); }
+.tsm-dot.active { width: 20px; border-radius: 4px; }
+.tsm-dot.done { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.3); }
+
+/* ── Slide ── */
+.tsm-slide {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 32px 16px;
+  border: 1px solid transparent;
+  margin: 0 16px;
+  border-radius: 20px;
+  transition: background 0.4s ease, border-color 0.4s ease;
+}
+
+.tsm-slide::-webkit-scrollbar { width: 4px; }
+.tsm-slide::-webkit-scrollbar-track { background: transparent; }
+.tsm-slide::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+/* Slide Animations */
+@keyframes slideInForward {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes slideInBackward {
+  from { opacity: 0; transform: translateX(-40px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.tsm-anim-forward { animation: slideInForward 0.35s cubic-bezier(0.22,1,0.36,1); }
+.tsm-anim-backward { animation: slideInBackward 0.35s cubic-bezier(0.22,1,0.36,1); }
+
+/* ── Slide Content ── */
+.tsm-slide-tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border: 1px solid;
+  border-radius: 20px;
+  padding: 3px 10px;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.tsm-slide-icon {
+  font-size: 42px;
+  margin-bottom: 8px;
+  line-height: 1;
+}
+
+.tsm-slide-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0 0 6px;
+  letter-spacing: -0.4px;
+}
+
+.tsm-slide-subtitle {
+  font-size: 13.5px;
+  color: rgba(255,255,255,0.45);
+  margin: 0 0 18px;
+  font-weight: 400;
+}
+
+.tsm-body-text {
+  font-size: 15px;
+  color: #cbd5e1;
+  line-height: 1.7;
+  margin: 0 0 16px;
+}
+
+/* ── Causes Grid ── */
+.tsm-causes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.tsm-cause-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid;
+  border-radius: 14px;
+  padding: 16px 14px;
+  text-align: center;
+  animation: cardPop 0.4s ease both;
+}
+
+@keyframes cardPop {
+  from { opacity: 0; transform: scale(0.9) translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.tsm-cause-icon { font-size: 30px; display: block; margin-bottom: 8px; }
+.tsm-cause-label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px; }
+.tsm-cause-desc { font-size: 12px; color: rgba(255,255,255,0.45); margin: 0; line-height: 1.5; }
+
+/* ── Steps ── */
+.tsm-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 16px;
+}
+
+.tsm-step {
+  display: flex;
+  flex-direction: column;
+  animation: cardPop 0.4s ease both;
+}
+
+.tsm-step-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 4px;
+}
+
+.tsm-step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: #0a0f1e;
+  font-weight: 700;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tsm-step-icon { font-size: 24px; flex-shrink: 0; }
+
+.tsm-step-body strong { font-size: 14px; display: block; margin-bottom: 3px; }
+.tsm-step-body p { font-size: 12.5px; color: rgba(255,255,255,0.45); margin: 0; line-height: 1.5; }
+
+.tsm-step-arrow {
+  text-align: center;
+  color: rgba(255,255,255,0.25);
+  font-size: 16px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+/* ── Signs Grid ── */
+.tsm-signs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.tsm-sign-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid;
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+  animation: cardPop 0.4s ease both;
+}
+
+.tsm-sign-icon { font-size: 28px; display: block; margin-bottom: 6px; }
+.tsm-sign-card strong { font-size: 13px; display: block; margin-bottom: 6px; }
+.tsm-sign-card p { font-size: 12px; color: rgba(255,255,255,0.4); margin: 0; line-height: 1.5; }
+
+/* ── Timeline ── */
+.tsm-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.tsm-event {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  animation: cardPop 0.4s ease both;
+}
+
+.tsm-event-year {
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid;
+  border-radius: 8px;
+  padding: 4px 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.tsm-event-body {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  padding: 10px 14px;
+  flex: 1;
+}
+
+.tsm-event-body strong { font-size: 13px; color: #f1f5f9; display: block; margin-bottom: 3px; }
+.tsm-event-body p { font-size: 12px; color: rgba(255,255,255,0.45); margin: 0; }
+
+/* ── Effects List ── */
+.tsm-effects-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.tsm-effect-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 12px 14px;
+  animation: cardPop 0.4s ease both;
+}
+
+.tsm-effect-icon { font-size: 24px; flex-shrink: 0; }
+.tsm-effect-row strong { font-size: 13.5px; display: block; margin-bottom: 3px; }
+.tsm-effect-row p { font-size: 12.5px; color: rgba(255,255,255,0.42); margin: 0; line-height: 1.5; }
+
+/* ── Tips Grid ── */
+.tsm-tips-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.tsm-tip-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  animation: cardPop 0.4s ease both;
+}
+
+.tsm-tip-icon { font-size: 22px; flex-shrink: 0; }
+.tsm-tip-card p { font-size: 12.5px; color: rgba(255,255,255,0.55); margin: 0; line-height: 1.5; }
+
+/* ── During Cols ── */
+.tsm-during-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.tsm-do-header {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  letter-spacing: 0.3px;
+}
+
+.tsm-do-item {
+  font-size: 12.5px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.5;
+  margin-bottom: 8px;
+  display: flex;
+  gap: 8px;
+  animation: cardPop 0.4s ease both;
+}
+
+/* ── Measures Grid ── */
+.tsm-measures-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.tsm-measure-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid;
+  border-radius: 14px;
+  padding: 14px 12px;
+  text-align: center;
+  animation: cardPop 0.4s ease both;
+}
+
+.tsm-measure-icon { font-size: 26px; display: block; margin-bottom: 8px; }
+.tsm-measure-card strong { font-size: 12px; display: block; margin-bottom: 5px; }
+.tsm-measure-card p { font-size: 11.5px; color: rgba(255,255,255,0.4); margin: 0; line-height: 1.5; }
+
+/* ── Fact Badge ── */
+.tsm-fact-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid;
+  border-radius: 30px;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+/* ── Navigation ── */
+.tsm-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px 20px;
+  flex-shrink: 0;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+
+.tsm-nav-btn {
+  padding: 10px 22px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: transparent;
+  color: rgba(255,255,255,0.6);
+  font-family: 'Sora', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tsm-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.tsm-nav-btn:hover:not(:disabled) { background: rgba(255,255,255,0.08); color: #fff; }
+
+.tsm-nav-btn.tsm-next {
+  color: #0a0f1e;
+}
+.tsm-nav-btn.tsm-next:hover:not(:disabled) {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+.tsm-nav-center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tsm-nav-hint {
+  font-size: 11.5px;
+  color: rgba(255,255,255,0.25);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tsm-finish-btn {
+  padding: 10px 24px;
+  background: linear-gradient(135deg, #6ee7b7, #3b82f6);
+  border: none;
+  border-radius: 10px;
+  color: #0a0f1e;
+  font-family: 'Sora', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+}
+
+.tsm-finish-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .tsm-causes-grid { grid-template-columns: 1fr; }
+  .tsm-signs-grid { grid-template-columns: 1fr; }
+  .tsm-tips-grid { grid-template-columns: 1fr; }
+  .tsm-during-cols { grid-template-columns: 1fr; }
+  .tsm-measures-grid { grid-template-columns: 1fr 1fr; }
+  .tsm-slide { padding: 16px; }
+}

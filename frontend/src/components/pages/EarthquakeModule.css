@@ -1,0 +1,451 @@
+/* ============================================================
+   EarthquakeModule.css — Earthquake Learning Slides
+   Matches dark glassmorphism theme from TsunamiModule.css
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap');
+
+/* ── Overlay ── */
+.eqm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: eqFadeOverlay 0.3s ease;
+}
+
+@keyframes eqFadeOverlay {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Modal ── */
+.eqm-modal {
+  width: 100%;
+  max-width: 760px;
+  max-height: 92vh;
+  background: rgba(10, 15, 30, 0.97);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 28px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7);
+  animation: eqModalIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  font-family: 'Sora', sans-serif;
+}
+
+@keyframes eqModalIn {
+  from { opacity: 0; transform: scale(0.92) translateY(20px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ── Header ── */
+.eqm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  flex-shrink: 0;
+}
+
+.eqm-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.eqm-module-badge {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  border-radius: 20px;
+  padding: 4px 12px;
+}
+
+.eqm-slide-count {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.eqm-header-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.eqm-progress-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.eqm-close-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.eqm-close-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+/* ── Progress Track ── */
+.eqm-progress-track {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.07);
+  flex-shrink: 0;
+}
+
+.eqm-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease, background 0.5s ease;
+}
+
+/* ── Slide Dots ── */
+.eqm-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 12px 24px 8px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.eqm-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.eqm-dot:hover { border-color: rgba(255,255,255,0.5); transform: scale(1.2); }
+.eqm-dot.active { width: 20px; border-radius: 4px; }
+.eqm-dot.done { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.3); }
+
+/* ── Slide ── */
+.eqm-slide {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 32px 16px;
+  border: 1px solid transparent;
+  margin: 0 16px;
+  border-radius: 20px;
+  transition: background 0.4s ease, border-color 0.4s ease;
+}
+
+.eqm-slide::-webkit-scrollbar { width: 4px; }
+.eqm-slide::-webkit-scrollbar-track { background: transparent; }
+.eqm-slide::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+@keyframes eqSlideInForward {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes eqSlideInBackward {
+  from { opacity: 0; transform: translateX(-40px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.eqm-anim-forward { animation: eqSlideInForward 0.35s cubic-bezier(0.22,1,0.36,1); }
+.eqm-anim-backward { animation: eqSlideInBackward 0.35s cubic-bezier(0.22,1,0.36,1); }
+
+/* ── Slide Content ── */
+.eqm-slide-tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border: 1px solid;
+  border-radius: 20px;
+  padding: 3px 10px;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.eqm-slide-icon { font-size: 42px; margin-bottom: 8px; line-height: 1; }
+.eqm-slide-title { font-size: 22px; font-weight: 700; color: #f1f5f9; margin: 0 0 6px; letter-spacing: -0.4px; }
+.eqm-slide-subtitle { font-size: 13.5px; color: rgba(255,255,255,0.45); margin: 0 0 18px; font-weight: 400; }
+.eqm-body-text { font-size: 15px; color: #cbd5e1; line-height: 1.7; margin: 0 0 16px; }
+
+/* ── Causes Grid ── */
+.eqm-causes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.eqm-cause-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid;
+  border-radius: 14px;
+  padding: 16px 14px;
+  text-align: center;
+  animation: eqCardPop 0.4s ease both;
+}
+
+@keyframes eqCardPop {
+  from { opacity: 0; transform: scale(0.9) translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.eqm-cause-icon { font-size: 30px; display: block; margin-bottom: 8px; }
+.eqm-cause-label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px; }
+.eqm-cause-desc { font-size: 12px; color: rgba(255,255,255,0.45); margin: 0; line-height: 1.5; }
+
+/* ── Steps ── */
+.eqm-steps { display: flex; flex-direction: column; gap: 0; margin-bottom: 16px; }
+
+.eqm-step { display: flex; flex-direction: column; animation: eqCardPop 0.4s ease both; }
+
+.eqm-step-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 4px;
+}
+
+.eqm-step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: #0a0f1e;
+  font-weight: 700;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.eqm-step-icon { font-size: 24px; flex-shrink: 0; }
+.eqm-step-body strong { font-size: 14px; display: block; margin-bottom: 3px; }
+.eqm-step-body p { font-size: 12.5px; color: rgba(255,255,255,0.45); margin: 0; line-height: 1.5; }
+.eqm-step-arrow { text-align: center; color: rgba(255,255,255,0.25); font-size: 16px; line-height: 1; margin-bottom: 4px; }
+
+/* ── Signs Grid ── */
+.eqm-signs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+
+.eqm-sign-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid;
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+  animation: eqCardPop 0.4s ease both;
+}
+
+.eqm-sign-icon { font-size: 28px; display: block; margin-bottom: 6px; }
+.eqm-sign-card strong { font-size: 13px; display: block; margin-bottom: 6px; }
+.eqm-sign-card p { font-size: 12px; color: rgba(255,255,255,0.4); margin: 0; line-height: 1.5; }
+
+/* ── Timeline ── */
+.eqm-timeline { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+
+.eqm-event { display: flex; align-items: flex-start; gap: 14px; animation: eqCardPop 0.4s ease both; }
+
+.eqm-event-year {
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid;
+  border-radius: 8px;
+  padding: 4px 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.eqm-event-body {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  padding: 10px 14px;
+  flex: 1;
+}
+
+.eqm-event-body strong { font-size: 13px; color: #f1f5f9; display: block; margin-bottom: 3px; }
+.eqm-event-body p { font-size: 12px; color: rgba(255,255,255,0.45); margin: 0; }
+
+/* ── Effects List ── */
+.eqm-effects-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+
+.eqm-effect-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 12px 14px;
+  animation: eqCardPop 0.4s ease both;
+}
+
+.eqm-effect-icon { font-size: 24px; flex-shrink: 0; }
+.eqm-effect-row strong { font-size: 13.5px; display: block; margin-bottom: 3px; }
+.eqm-effect-row p { font-size: 12.5px; color: rgba(255,255,255,0.42); margin: 0; line-height: 1.5; }
+
+/* ── Tips Grid ── */
+.eqm-tips-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+
+.eqm-tip-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  animation: eqCardPop 0.4s ease both;
+}
+
+.eqm-tip-icon { font-size: 22px; flex-shrink: 0; }
+.eqm-tip-card p { font-size: 12.5px; color: rgba(255,255,255,0.55); margin: 0; line-height: 1.5; }
+
+/* ── During Cols ── */
+.eqm-during-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+
+.eqm-do-header { font-size: 13px; font-weight: 700; margin-bottom: 10px; letter-spacing: 0.3px; }
+
+.eqm-do-item {
+  font-size: 12.5px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.5;
+  margin-bottom: 8px;
+  display: flex;
+  gap: 8px;
+  animation: eqCardPop 0.4s ease both;
+}
+
+/* ── Measures Grid ── */
+.eqm-measures-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+
+.eqm-measure-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid;
+  border-radius: 14px;
+  padding: 14px 12px;
+  text-align: center;
+  animation: eqCardPop 0.4s ease both;
+}
+
+.eqm-measure-icon { font-size: 26px; display: block; margin-bottom: 8px; }
+.eqm-measure-card strong { font-size: 12px; display: block; margin-bottom: 5px; }
+.eqm-measure-card p { font-size: 11.5px; color: rgba(255,255,255,0.4); margin: 0; line-height: 1.5; }
+
+/* ── Richter Table ── */
+.eqm-richter-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 12.5px; }
+.eqm-richter-table th { padding: 8px 12px; text-align: left; font-weight: 600; border-bottom: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); }
+.eqm-richter-table td { padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); }
+.eqm-richter-table tr:hover td { background: rgba(255,255,255,0.03); }
+
+/* ── Zones Grid ── */
+.eqm-zones-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+
+.eqm-zone-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid;
+  border-radius: 12px;
+  padding: 14px;
+  animation: eqCardPop 0.4s ease both;
+}
+
+.eqm-zone-card strong { font-size: 13px; display: block; margin-bottom: 5px; }
+.eqm-zone-card p { font-size: 12px; color: rgba(255,255,255,0.45); margin: 0; }
+
+/* ── Fact Badge ── */
+.eqm-fact-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid;
+  border-radius: 30px;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+/* ── Navigation ── */
+.eqm-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px 20px;
+  flex-shrink: 0;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+
+.eqm-nav-btn {
+  padding: 10px 22px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: transparent;
+  color: rgba(255,255,255,0.6);
+  font-family: 'Sora', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.eqm-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.eqm-nav-btn:hover:not(:disabled) { background: rgba(255,255,255,0.08); color: #fff; }
+
+.eqm-nav-btn.eqm-next { color: #0a0f1e; }
+.eqm-nav-btn.eqm-next:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+
+.eqm-nav-center { flex: 1; display: flex; align-items: center; justify-content: center; }
+
+.eqm-nav-hint { font-size: 11.5px; color: rgba(255,255,255,0.25); text-transform: uppercase; letter-spacing: 0.5px; }
+
+.eqm-finish-btn {
+  padding: 10px 24px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  border: none;
+  border-radius: 10px;
+  color: #0a0f1e;
+  font-family: 'Sora', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3);
+}
+
+.eqm-finish-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .eqm-causes-grid { grid-template-columns: 1fr; }
+  .eqm-signs-grid { grid-template-columns: 1fr; }
+  .eqm-tips-grid { grid-template-columns: 1fr; }
+  .eqm-during-cols { grid-template-columns: 1fr; }
+  .eqm-measures-grid { grid-template-columns: 1fr 1fr; }
+  .eqm-zones-grid { grid-template-columns: 1fr; }
+  .eqm-slide { padding: 16px; }
+}

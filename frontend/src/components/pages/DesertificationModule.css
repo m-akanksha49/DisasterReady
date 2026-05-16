@@ -1,0 +1,337 @@
+/* ============================================================
+   DesertificationModule.css — Desertification Learning Slides
+   Matches dark glassmorphism theme from TsunamiModule.css
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap');
+
+/* ── Overlay ── */
+.dsm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: dsFadeOverlay 0.3s ease;
+}
+
+@keyframes dsFadeOverlay {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Modal ── */
+.dsm-modal {
+  width: 100%;
+  max-width: 760px;
+  max-height: 92vh;
+  background: rgba(10, 15, 30, 0.97);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 28px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7);
+  animation: dsModalIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  font-family: 'Sora', sans-serif;
+}
+
+@keyframes dsModalIn {
+  from { opacity: 0; transform: scale(0.92) translateY(20px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ── Header ── */
+.dsm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  flex-shrink: 0;
+}
+
+.dsm-header-left { display: flex; align-items: center; gap: 12px; }
+
+.dsm-module-badge {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fb923c;
+  background: rgba(251, 146, 60, 0.12);
+  border: 1px solid rgba(251, 146, 60, 0.25);
+  border-radius: 20px;
+  padding: 4px 12px;
+}
+
+.dsm-slide-count { font-size: 13px; color: rgba(255, 255, 255, 0.35); }
+
+.dsm-header-right { display: flex; align-items: center; gap: 14px; }
+.dsm-progress-label { font-size: 12px; color: rgba(255, 255, 255, 0.35); }
+
+.dsm-close-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.dsm-close-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+/* ── Progress Track ── */
+.dsm-progress-track { height: 3px; background: rgba(255, 255, 255, 0.07); flex-shrink: 0; }
+.dsm-progress-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease, background 0.5s ease; }
+
+/* ── Slide Dots ── */
+.dsm-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 12px 24px 8px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.dsm-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.dsm-dot:hover { border-color: rgba(255,255,255,0.5); transform: scale(1.2); }
+.dsm-dot.active { width: 20px; border-radius: 4px; }
+.dsm-dot.done { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.3); }
+
+/* ── Slide ── */
+.dsm-slide {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 32px 16px;
+  border: 1px solid transparent;
+  margin: 0 16px;
+  border-radius: 20px;
+  transition: background 0.4s ease, border-color 0.4s ease;
+}
+
+.dsm-slide::-webkit-scrollbar { width: 4px; }
+.dsm-slide::-webkit-scrollbar-track { background: transparent; }
+.dsm-slide::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+@keyframes dsSlideInForward {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes dsSlideInBackward {
+  from { opacity: 0; transform: translateX(-40px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.dsm-anim-forward { animation: dsSlideInForward 0.35s cubic-bezier(0.22,1,0.36,1); }
+.dsm-anim-backward { animation: dsSlideInBackward 0.35s cubic-bezier(0.22,1,0.36,1); }
+
+/* ── Slide Content ── */
+.dsm-slide-tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border: 1px solid;
+  border-radius: 20px;
+  padding: 3px 10px;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.dsm-slide-icon { font-size: 42px; margin-bottom: 8px; line-height: 1; }
+.dsm-slide-title { font-size: 22px; font-weight: 700; color: #f1f5f9; margin: 0 0 6px; letter-spacing: -0.4px; }
+.dsm-slide-subtitle { font-size: 13.5px; color: rgba(255,255,255,0.45); margin: 0 0 18px; font-weight: 400; }
+.dsm-body-text { font-size: 15px; color: #cbd5e1; line-height: 1.7; margin: 0 0 16px; }
+
+/* ── Causes Grid ── */
+.dsm-causes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+
+.dsm-cause-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid;
+  border-radius: 14px;
+  padding: 16px 14px;
+  text-align: center;
+  animation: dsCardPop 0.4s ease both;
+}
+
+@keyframes dsCardPop {
+  from { opacity: 0; transform: scale(0.9) translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.dsm-cause-icon { font-size: 30px; display: block; margin-bottom: 8px; }
+.dsm-cause-label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px; }
+.dsm-cause-desc { font-size: 12px; color: rgba(255,255,255,0.45); margin: 0; line-height: 1.5; }
+
+/* ── Effects List ── */
+.dsm-effects-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+
+.dsm-effect-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 12px 14px;
+  animation: dsCardPop 0.4s ease both;
+}
+
+.dsm-effect-icon { font-size: 24px; flex-shrink: 0; }
+.dsm-effect-row strong { font-size: 13.5px; display: block; margin-bottom: 3px; }
+.dsm-effect-row p { font-size: 12.5px; color: rgba(255,255,255,0.42); margin: 0; line-height: 1.5; }
+
+/* ── Tips Grid ── */
+.dsm-tips-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+
+.dsm-tip-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  animation: dsCardPop 0.4s ease both;
+}
+
+.dsm-tip-icon { font-size: 22px; flex-shrink: 0; }
+.dsm-tip-card p { font-size: 12.5px; color: rgba(255,255,255,0.55); margin: 0; line-height: 1.5; }
+
+/* ── During Cols ── */
+.dsm-during-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+.dsm-do-header { font-size: 13px; font-weight: 700; margin-bottom: 10px; letter-spacing: 0.3px; }
+.dsm-do-item {
+  font-size: 12.5px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.5;
+  margin-bottom: 8px;
+  display: flex;
+  gap: 8px;
+  animation: dsCardPop 0.4s ease both;
+}
+
+/* ── Measures Grid ── */
+.dsm-measures-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+
+.dsm-measure-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid;
+  border-radius: 14px;
+  padding: 14px 12px;
+  text-align: center;
+  animation: dsCardPop 0.4s ease both;
+}
+
+.dsm-measure-icon { font-size: 26px; display: block; margin-bottom: 8px; }
+.dsm-measure-card strong { font-size: 12px; display: block; margin-bottom: 5px; }
+.dsm-measure-card p { font-size: 11.5px; color: rgba(255,255,255,0.4); margin: 0; line-height: 1.5; }
+
+/* ── Stats Row ── */
+.dsm-stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+
+.dsm-stat-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid;
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+  animation: dsCardPop 0.4s ease both;
+}
+
+.dsm-stat-value { font-size: 22px; font-weight: 700; display: block; margin-bottom: 4px; }
+.dsm-stat-label { font-size: 11.5px; color: rgba(255,255,255,0.45); line-height: 1.4; }
+
+/* ── Fact Badge ── */
+.dsm-fact-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid;
+  border-radius: 30px;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+/* ── Navigation ── */
+.dsm-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px 20px;
+  flex-shrink: 0;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+
+.dsm-nav-btn {
+  padding: 10px 22px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: transparent;
+  color: rgba(255,255,255,0.6);
+  font-family: 'Sora', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dsm-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.dsm-nav-btn:hover:not(:disabled) { background: rgba(255,255,255,0.08); color: #fff; }
+
+.dsm-nav-btn.dsm-next { color: #0a0f1e; }
+.dsm-nav-btn.dsm-next:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+
+.dsm-nav-center { flex: 1; display: flex; align-items: center; justify-content: center; }
+.dsm-nav-hint { font-size: 11.5px; color: rgba(255,255,255,0.25); text-transform: uppercase; letter-spacing: 0.5px; }
+
+.dsm-finish-btn {
+  padding: 10px 24px;
+  background: linear-gradient(135deg, #fb923c, #f97316);
+  border: none;
+  border-radius: 10px;
+  color: #0a0f1e;
+  font-family: 'Sora', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(249, 115, 22, 0.3);
+}
+
+.dsm-finish-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .dsm-causes-grid { grid-template-columns: 1fr; }
+  .dsm-tips-grid { grid-template-columns: 1fr; }
+  .dsm-during-cols { grid-template-columns: 1fr; }
+  .dsm-measures-grid { grid-template-columns: 1fr 1fr; }
+  .dsm-stats-row { grid-template-columns: 1fr; }
+  .dsm-slide { padding: 16px; }
+}
