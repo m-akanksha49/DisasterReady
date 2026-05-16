@@ -1,121 +1,58 @@
-import React, { useState } from "react";
-import axios from "axios";
+const express = require("express");
+const router = express.Router();
 
-const QuizGenerator = () => {
-  const [role, setRole] = useState("");
-  const [classLevel, setClassLevel] = useState("");
-  const [topic, setTopic] = useState("");
+router.post("/generate-quiz", async (req, res) => {
+  try {
+    const { topic } = req.body;
 
-  const [questions, setQuestions] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  const generateQuiz = async () => {
-    try {
-      setLoading(true);
-
-      const response = await axios.post(
-        "https://disasterready-backend.onrender.com/api/generate-quiz",
+    const quizzes = {
+      earthquake: [
         {
-          role,
-          classLevel,
-          topic,
+          question: "What should you do during an earthquake?",
+          options: [
+            "Run outside immediately",
+            "Hide under a table",
+            "Use elevator",
+            "Stand near windows"
+          ],
+          answer: "Hide under a table"
         }
-      );
+      ],
 
-      console.log("Quiz Response:", response.data);
+      floods: [
+        {
+          question: "What should you avoid during floods?",
+          options: [
+            "Walking in flood water",
+            "Listening to alerts",
+            "Using flashlight",
+            "Moving to higher ground"
+          ],
+          answer: "Walking in flood water"
+        }
+      ]
+    };
 
-      if (response.data.questions) {
-        setQuestions(response.data.questions);
-      } else {
-        alert("No quiz questions received");
-      }
+    const selectedQuiz =
+      quizzes[topic?.toLowerCase()] || [
+        {
+          question: `What is ${topic}?`,
+          options: ["A", "B", "C", "D"],
+          answer: "A"
+        }
+      ];
 
-    } catch (error) {
-      console.error("Quiz Error:", error);
+    res.json({
+      questions: selectedQuiz
+    });
 
-      alert("Failed to generate quiz. Please check the server.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  } catch (error) {
+    console.error(error);
 
-  return (
-    <div style={{ padding: "20px" }}>
-      <h1>AI Quiz Generator</h1>
+    res.status(500).json({
+      error: "Quiz generation failed"
+    });
+  }
+});
 
-      <input
-        type="text"
-        placeholder="Enter Role"
-        value={role}
-        onChange={(e) => setRole(e.target.value)}
-        style={{
-          display: "block",
-          marginBottom: "10px",
-          padding: "10px",
-          width: "300px"
-        }}
-      />
-
-      <input
-        type="text"
-        placeholder="Enter Class Level"
-        value={classLevel}
-        onChange={(e) => setClassLevel(e.target.value)}
-        style={{
-          display: "block",
-          marginBottom: "10px",
-          padding: "10px",
-          width: "300px"
-        }}
-      />
-
-      <input
-        type="text"
-        placeholder="Enter Topic"
-        value={topic}
-        onChange={(e) => setTopic(e.target.value)}
-        style={{
-          display: "block",
-          marginBottom: "10px",
-          padding: "10px",
-          width: "300px"
-        }}
-      />
-
-      <button
-        onClick={generateQuiz}
-        disabled={loading}
-        style={{
-          padding: "10px 20px",
-          cursor: "pointer"
-        }}
-      >
-        {loading ? "Generating..." : "Generate Quiz"}
-      </button>
-
-      <div style={{ marginTop: "30px" }}>
-        {questions.map((q, index) => (
-          <div
-            key={index}
-            style={{
-              border: "1px solid #ccc",
-              padding: "15px",
-              marginBottom: "15px",
-              borderRadius: "10px"
-            }}
-          >
-            <h3>
-              {index + 1}. {q.question}
-            </h3>
-
-            {q.options.map((option, i) => (
-              <p key={i}>• {option}</p>
-            ))}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-export default QuizGenerator;
+module.exports = router;
