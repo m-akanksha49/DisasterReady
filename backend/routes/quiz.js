@@ -1,75 +1,91 @@
 const express = require("express");
 const router = express.Router();
+const axios = require("axios");
 
 router.post("/generate-quiz", async (req, res) => {
   try {
-    const { topic } = req.body;
+    const { role, classLevel, topic } = req.body;
 
-    const quizzes = {
-      earthquake: [
-        {
-          question: "What should you do during an earthquake?",
-          options: [
-            "Run outside immediately",
-            "Hide under a table",
-            "Use elevator",
-            "Stand near windows"
-          ],
-          answer: "Hide under a table"
-        },
-        {
-          question: "Which scale measures earthquakes?",
-          options: [
-            "Richter Scale",
-            "Celsius Scale",
-            "Pascal Scale",
-            "Kelvin Scale"
-          ],
-          answer: "Richter Scale"
+    if (!topic) {
+      return res.status(400).json({
+        error: "Topic is required"
+      });
+    }
+
+    const prompt = `
+You are a quiz generator.
+
+Generate 5 multiple-choice questions for:
+
+Role: ${role || "Student"}
+Class Level: ${classLevel || "General"}
+Topic: ${topic}
+
+STRICT RULES:
+- Return ONLY valid JSON
+- No markdown
+- No explanation
+
+Format:
+{
+  "questions": [
+    {
+      "question": "string",
+      "options": ["A", "B", "C", "D"],
+      "answer": "A"
+    }
+  ]
+}
+`;
+
+    const response = await axios.post(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        model: "openai/gpt-4o-mini",
+        messages: [
+          {
+            role: "user",
+            content: prompt
+          }
+        ]
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          "Content-Type": "application/json"
         }
-      ],
+      }
+    );
 
-      floods: [
-        {
-          question: "What should you avoid during floods?",
-          options: [
-            "Walking in flood water",
-            "Listening to alerts",
-            "Using flashlight",
-            "Moving to higher ground"
-          ],
-          answer: "Walking in flood water"
-        }
-      ],
+    let aiText = response.data.choices?.[0]?.message?.content;
 
-      fire: [
-        {
-          question: "What is the emergency number for fire services?",
-          options: ["101", "100", "108", "112"],
-          answer: "101"
-        }
-      ]
-    };
+    if (!aiText) {
+      return res.status(500).json({
+        error: "No response from AI"
+      });
+    }
 
-    const selectedQuiz =
-      quizzes[topic?.toLowerCase()] || [
-        {
-          question: `What is ${topic}?`,
-          options: ["Disaster", "Safety", "Emergency", "Risk"],
-          answer: "Disaster"
-        }
-      ];
+    // SAFE JSON PARSE (IMPORTANT FIX)
+    let json;
+    try {
+      json = JSON.parse(aiText);
+    } catch (err) {
+      console.error("AI returned invalid JSON:", aiText);
 
-    res.json({
-      success: true,
-      questions: selectedQuiz
-    });
+      return res.status(500).json({
+        error: "AI response format error",
+        raw: aiText
+      });
+    }
+
+    res.json(json);
 
   } catch (error) {
-    console.error(error);
+    console.error("Quiz generation error:", error.message);
 
     res.status(500).json({
-      error: "Quiz generation failed"
+      error: "Failed to generate quiz",
+      details: error.message
     });
   }
 });
