@@ -1,34 +1,71 @@
 const express = require("express");
 const router = express.Router();
+const axios = require("axios");
 
 router.post("/generate-quiz", async (req, res) => {
   try {
     const { classLevel, topic } = req.body;
 
-    const questions = [
+    const prompt = `
+Generate 10 multiple choice quiz questions for Class ${classLevel}
+about ${topic} disaster preparedness.
+
+Return ONLY valid JSON in this format:
+
+{
+  "questions": [
+    {
+      "question": "Question here",
+      "options": ["Option1", "Option2", "Option3", "Option4"],
+      "answer": "Correct option text"
+    }
+  ]
+}
+
+Rules:
+- Generate exactly 10 questions
+- Make questions educational
+- Make options realistic
+- Do NOT include explanations
+- Response must be pure JSON only
+`;
+
+    const response = await axios.post(
+      "https://openrouter.ai/api/v1/chat/completions",
       {
-        question: `What should you do during a ${topic} emergency?`,
-        options: [
-          "Stay calm and follow safety rules",
-          "Ignore warnings",
-          "Run randomly",
-          "Hide without informing anyone"
+        model: "openai/gpt-4o-mini",
+        messages: [
+          {
+            role: "user",
+            content: prompt,
+          },
         ],
-        answer: "Stay calm and follow safety rules"
       },
       {
-        question: `Which emergency number is commonly used for help?`,
-        options: ["100", "108", "112", "All of the above"],
-        answer: "All of the above"
+        headers: {
+          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          "Content-Type": "application/json",
+        },
       }
-    ];
+    );
 
-    res.json({ questions });
+    let aiText = response.data.choices[0].message.content;
+
+    // remove markdown if AI sends ```json
+    aiText = aiText.replace(/```json/g, "").replace(/```/g, "").trim();
+
+    const quizData = JSON.parse(aiText);
+
+    res.json(quizData);
 
   } catch (error) {
-    console.error(error);
+    console.error(
+      "Quiz generation error:",
+      error.response?.data || error.message
+    );
+
     res.status(500).json({
-      error: "Quiz generation failed"
+      error: "Failed to generate AI quiz",
     });
   }
 });
