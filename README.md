@@ -30,7 +30,7 @@
 |----------------|------------------------------------------|
 | Frontend       | React                                    |
 | Backend        | Node.js / Express                        |
-| Database       | PostgreSQL / MySQL (Aiven)               |
+| Database       | MySQL (Aiven)               |
 | Auth & Storage | Firebase                                 |
 | Deployment     | Netlify (frontend)                       |
 
@@ -41,7 +41,7 @@
 ### Prerequisites
 - Node.js (v16+ recommended)
 - npm or yarn
-- MySQL/PostgreSQL database instance
+- MySQL database instance
 - Firebase project credentials
 
 ### Installation
@@ -76,17 +76,6 @@ cd frontend
 npm start
 ```
 
----
-
-## 📁 Project Structure
-
-```
-DisasterReady/
-├── backend/     # Express API, database models, routes
-├── frontend/    # React application (student & admin dashboards)
-├── netlify.toml # Netlify deployment config
-└── .gitignore
-```
 
 ---
 
